@@ -63,6 +63,7 @@ button:hover {
     background: #D6DFE2;
     color: #2F3E42;
     outline: none;
+    width: 40%;
 }
 
 label {
