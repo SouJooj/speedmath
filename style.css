@@ -48,6 +48,23 @@ button:hover {
     gap: 1rem;
 }
 
+.range {
+    display: flex;
+    justify-content: space-between; /* Distribui os inputs igualmente */
+    gap: 20px; /* Espaço entre os inputs */
+    margin-top: 1.5rem; /* Distância superior */
+}
+
+.range input {
+    font-size: 1rem;
+    padding: 10px;
+    border: 1px solid #4AB2B5;
+    border-radius: 5px;
+    background: #D6DFE2;
+    color: #2F3E42;
+    outline: none;
+}
+
 label {
     display: block;
     margin-bottom: 0.5rem;
@@ -63,6 +80,10 @@ input[type="number"], select, input[type="checkbox"] {
     background: #D6DFE2;
     color: #2F3E42;
     outline: none;
+}
+input[type="number"]:focus {
+    border-color: #4AB2B5; /* Destaca a borda ao focar */
+    box-shadow: 0 0 5px rgba(74, 178, 181, 0.5); /* Adiciona um leve brilho no foco */
 }
 
 input[type="number"] {
@@ -124,5 +145,5 @@ button#reiniciar {
 }
 
 button#reiniciar:hover {
-    background: #a73636;
+    background: #a73636;
 }

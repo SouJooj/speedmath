@@ -171,3 +171,10 @@ document.getElementById('resposta').addEventListener('keydown', (e) => {
         verificarResposta();
     }
 });
+document.getElementById('min').addEventListener('input', function (e) {
+    this.value = this.value.replace(/[^0-9]/g, '');
+});
+
+document.getElementById('max').addEventListener('input', function (e) {
+    this.value = this.value.replace(/[^0-9]/g, '');
+});
