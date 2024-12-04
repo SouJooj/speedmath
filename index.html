@@ -20,11 +20,12 @@
                     <label><input type="checkbox" value="/" class="operation"> ÷</label>
                 </div>
                 <div class="time-selection">
-                    <label for="time-select">Tempo (segundos)</label>
+                    <label for="time-select">Tempo</label>
                     <select id="time-select">
                         <option value="30">30</option>
                         <option value="60">60</option>
                         <option value="120">120</option>
+                        <option value="off">Desligado</option>
                     </select>
                 </div>
                 <div class="range">
@@ -43,6 +44,7 @@
             <div id="operacao" class="operation-display"></div>
             <input id="resposta" type="number" placeholder="Resultado">
             <button id="reiniciar" class="restart-btn">Reiniciar</button>
+            <button id="finalizar" class="finish-btn">Finalizar Jogo</button>
         </div>
 
         <!-- Tela de Resultados -->
