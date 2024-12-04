@@ -147,3 +147,12 @@ button#reiniciar {
 button#reiniciar:hover {
     background: #a73636;
 }
+
+button#finalizar {
+    background: #F39C12;
+    color: #FFFFFF;
+}
+
+button#finalizar:hover {
+    background: #e67e22;
+}
