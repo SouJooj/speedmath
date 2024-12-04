@@ -1,0 +1,128 @@
+body {
+    margin: 0;
+    font-family: 'Arial', sans-serif;
+    background-color: #2F3E42;
+    color: #D6DFE2;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+
+.container {
+    width: 90%;
+    max-width: 600px;
+    text-align: center;
+    background: #394E52;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    padding: 1.5rem;
+}
+
+h1 {
+    color: #4AB2B5;
+    font-size: 2.2rem;
+    margin-bottom: 1.5rem;
+}
+
+button {
+    padding: 10px 20px;
+    font-size: 1rem;
+    font-weight: bold;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    background: #4AB2B5;
+    color: #2F3E42;
+    transition: background 0.3s ease;
+    margin: 10px 0;
+}
+
+button:hover {
+    background: #368a8c;
+}
+
+.settings, .jogo, .resultado {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+label {
+    display: block;
+    margin-bottom: 0.5rem;
+    color: #D6DFE2;
+    font-weight: bold;
+}
+
+input[type="number"], select, input[type="checkbox"] {
+    font-size: 1rem;
+    padding: 10px;
+    border: 1px solid #4AB2B5;
+    border-radius: 5px;
+    background: #D6DFE2;
+    color: #2F3E42;
+    outline: none;
+}
+
+input[type="number"] {
+    width: 60px;
+    text-align: center;
+}
+
+input[type="checkbox"] {
+    margin-right: 5px;
+}
+
+.operation-checkboxes {
+    display: flex;
+    justify-content: center; /* Alinha as opções no centro */
+    gap: 20px; /* Espaço entre as opções */
+    flex-wrap: wrap; /* Permite que as opções se ajustem se houver necessidade */
+}
+
+.operation-checkboxes label {
+    display: inline-flex;
+    align-items: center; /* Alinha o texto e a caixa de seleção */
+}
+
+.timer {
+    font-size: 2.5rem;
+    font-weight: bold;
+    background: #4AB2B5;
+    color: #2F3E42;
+    padding: 10px;
+    border-radius: 5px;
+}
+
+.operation-display {
+    font-size: 2rem;
+    color: #D6DFE2;
+    margin: 20px 0;
+    font-weight: bold;
+}
+
+canvas {
+    margin-top: 1.5rem;
+}
+
+.account-details {
+    background: #2F3E42;
+    padding: 10px;
+    border-radius: 5px;
+    box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.5);
+}
+
+.account-details p {
+    margin: 10px 0;
+    font-size: 1rem;
+}
+
+button#reiniciar {
+    background: #D64545;
+    color: #FFFFFF;
+}
+
+button#reiniciar:hover {
+    background: #a73636;
+}

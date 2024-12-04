@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Speed Math</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <div class="container">
+        <!-- Tela de Configuração -->
+        <div class="config">
+            <h1>Speed Math</h1>
+            <div class="settings">
+                <div class="operation-checkboxes">
+                    <label><input type="checkbox" value="+" class="operation"> +</label>
+                    <label><input type="checkbox" value="-" class="operation"> −</label>
+                    <label><input type="checkbox" value="*" class="operation"> ×</label>
+                    <label><input type="checkbox" value="/" class="operation"> ÷</label>
+                </div>
+                <div class="time-selection">
+                    <label for="time-select">Tempo (segundos)</label>
+                    <select id="time-select">
+                        <option value="30">30</option>
+                        <option value="60">60</option>
+                        <option value="120">120</option>
+                    </select>
+                </div>
+                <div class="range">
+                    <label for="min">Min</label>
+                    <input id="min" type="number" value="1">
+                    <label for="max">Max</label>
+                    <input id="max" type="number" value="100">
+                </div>
+                <button id="start" class="start-btn">INICIAR</button>
+            </div>
+        </div>
+
+        <!-- Tela do Jogo -->
+        <div class="jogo" style="display: none;">
+            <div id="temporizador" class="timer">30</div>
+            <div id="operacao" class="operation-display"></div>
+            <input id="resposta" type="number" placeholder="Resultado">
+            <button id="reiniciar" class="restart-btn">Reiniciar</button>
+        </div>
+
+        <!-- Tela de Resultados -->
+        <div class="resultado" style="display: none;">
+            <canvas id="grafico"></canvas>
+            <button id="voltar">Voltar</button>
+            <button id="exibir-contas">Exibir Contas</button>
+            <div id="contas" class="account-details" style="display: none;"></div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
