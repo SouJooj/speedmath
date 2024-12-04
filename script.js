@@ -1,5 +1,5 @@
 // Variáveis globais
-let tempoJogada = 0;
+let tempoJogada = 30;
 let intervalo = 0;
 let respostaCorreta = 0;
 let acertos = 0;
@@ -73,33 +73,38 @@ function iniciarTemporizador() {
 
 // Função para atualizar o gráfico
 function atualizarGrafico() {
-    if (grafico) {
-        grafico.destroy();
-    }
-
     const ctx = document.getElementById('grafico').getContext('2d');
+    if (grafico) grafico.destroy();
     grafico = new Chart(ctx, {
-        type: 'pie',
+        type: 'bar',
         data: {
             labels: ['Acertos', 'Erros'],
             datasets: [{
+                label: 'Resultados',
                 data: [acertos, erros],
-                backgroundColor: ['rgba(0, 255, 0, 0.5)', 'rgba(255, 0, 0, 0.5)'],
-                borderColor: ['rgba(0, 255, 0, 1)', 'rgba(255, 0, 0, 1)'],
+                backgroundColor: ['#4AB2B5', '#F39C12'],
+                borderColor: ['#4AB2B5', '#F39C12'],
                 borderWidth: 1
             }]
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
         }
     });
 }
 
 // Função para finalizar o jogo
 function finalizarJogo() {
+    clearInterval(temporizador);
     document.querySelector('.jogo').style.display = 'none';
     document.querySelector('.resultado').style.display = 'block';
     atualizarGrafico();
     atualizarContas();
 }
-
 // Função para atualizar as contas exibidas
 function atualizarContas() {
     const contasContainer = document.getElementById('contas');
@@ -178,3 +183,5 @@ document.getElementById('min').addEventListener('input', function (e) {
 document.getElementById('max').addEventListener('input', function (e) {
     this.value = this.value.replace(/[^0-9]/g, '');
 });
+
+document.getElementById('finalizar').addEventListener('click', finalizarJogo);
