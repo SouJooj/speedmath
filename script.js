@@ -168,7 +168,8 @@ function salvarNoLeaderboard() {
         erros,
         tempoMedio: (tempoMedio / 1000).toFixed(2),
         operacoes: operacoesSelecionadas.join(', '),
-        data: new Date().toLocaleString()
+        data: new Date().toLocaleString(),
+        contas: [...contas] // Inclui as contas realizadas no jogo
     };
 
     const leaderboard = JSON.parse(localStorage.getItem(leaderboardKey)) || [];
@@ -179,7 +180,39 @@ function salvarNoLeaderboard() {
     alert('Resultado salvo no leaderboard!');
 }
 
-// Função para exibir o leaderboard (com botão excluir)
+// Função para exibir as contas de um jogador no leaderboard
+function exibirEstatisticas(index) {
+    const leaderboard = JSON.parse(localStorage.getItem(leaderboardKey)) || [];
+    const entry = leaderboard[index];
+
+    if (!entry || !entry.contas) return;
+
+    const contasDetalhes = document.getElementById('contas-detalhadas');
+    contasDetalhes.innerHTML = `<h3>Estatísticas de ${entry.jogador}</h3>`;
+
+    entry.contas.forEach(({ operacao, respostaUsuario, correto, respostaCorreta, tempoResposta }) => {
+        const cor = correto ? 'green' : 'red';
+        const status = correto ? 'Correto' : `Errado (Correto: ${respostaCorreta})`;
+        contasDetalhes.innerHTML += `
+            <p style="color: ${cor};">
+                ${operacao} = ${respostaUsuario} (${status}) - Tempo: ${(tempoResposta / 1000).toFixed(2)}s
+            </p>
+        `;
+    });
+
+    // Mostra as estatísticas gerais
+    contasDetalhes.innerHTML += `
+        <hr>
+        <p style="color: green;">Acertos: ${entry.acertos}</p>
+        <p style="color: red;">Erros: ${entry.erros}</p>
+        <p>Tempo Médio: ${entry.tempoMedio}s</p>
+    `;
+
+    document.querySelector('.leaderboard').style.display = 'none';
+    document.querySelector('.estatisticas').style.display = 'block';
+}
+
+// Função para exibir o leaderboard com botão de estatísticas
 function exibirLeaderboard() {
     const leaderboard = JSON.parse(localStorage.getItem(leaderboardKey)) || [];
     const leaderboardList = document.getElementById('leaderboard-list');
@@ -199,6 +232,7 @@ function exibirLeaderboard() {
                 Tempo Médio: ${entry.tempoMedio}s<br>
                 Operações: ${entry.operacoes}<br>
                 Data: ${entry.data}<br>
+                <button onclick="exibirEstatisticas(${index})" class="stats-btn">Ver Estatísticas</button>
                 <button onclick="excluirDoLeaderboard(${index})" class="delete-btn">Excluir</button>
             </li>
         `;
@@ -208,6 +242,11 @@ function exibirLeaderboard() {
     document.querySelector('.leaderboard').style.display = 'block';
 }
 
+// Botão "Voltar do Detalhes"
+document.getElementById('voltar-detalhes').addEventListener('click', () => {
+    document.querySelector('.estatisticas').style.display = 'none';
+    document.querySelector('.leaderboard').style.display = 'block';
+});
 
 // Função para excluir uma entrada do leaderboard
 function excluirDoLeaderboard(index) {

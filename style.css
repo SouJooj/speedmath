@@ -209,3 +209,17 @@ button.delete-btn:hover {
     background: #a73636;
 }
 
+button.stats-btn {
+    background: #3498DB;
+    color: #FFFFFF;
+    font-size: 0.9rem;
+    padding: 5px 10px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+button.stats-btn:hover {
+    background: #2980B9;
+}
