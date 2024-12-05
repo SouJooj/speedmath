@@ -8,6 +8,8 @@ let temporizador = null;
 let contas = [];
 let operacoesSelecionadas = [];
 let grafico;
+let tempoInicioQuestao = 0; // Marca o início de cada questão
+let temposPorQuestao = []; // Armazena os tempos de cada questão
 
 // Função para gerar operação aleatória
 function gerarOperacao() {
@@ -21,33 +23,36 @@ function gerarOperacao() {
     } while (operador === '/' && (num1 % num2 !== 0 || num1 === num2));
 
     if (operador === '/') {
-        // Ajusta para divisão exata e evita números iguais
         respostaCorreta = num1 / num2;
         document.getElementById('operacao').innerText = `${num1} ÷ ${num2}`;
     } else if (operador === '-') {
-        // Garante que o primeiro número seja maior para evitar números negativos
         const maior = Math.max(num1, num2);
         const menor = Math.min(num1, num2);
         respostaCorreta = maior - menor;
         document.getElementById('operacao').innerText = `${maior} − ${menor}`;
     } else {
         respostaCorreta = eval(`${num1} ${operador} ${num2}`);
-        const operadorTexto = operador === '*' ? '×' : operador; // Ajusta símbolo de multiplicação
+        const operadorTexto = operador === '*' ? '×' : operador;
         document.getElementById('operacao').innerText = `${num1} ${operadorTexto} ${num2}`;
     }
+
+    tempoInicioQuestao = performance.now(); // Marca o início da nova questão
 }
+
 
 // Função para verificar resposta do usuário
 function verificarResposta() {
     const respostaUsuario = parseInt(document.getElementById('resposta').value);
     const operacao = document.getElementById('operacao').innerText;
+    const tempoResposta = performance.now() - tempoInicioQuestao; // Calcula o tempo de resposta
+    temposPorQuestao.push(tempoResposta);
 
     if (respostaUsuario === respostaCorreta) {
         acertos++;
-        contas.push({ operacao, respostaUsuario, correto: true, respostaCorreta });
+        contas.push({ operacao, respostaUsuario, correto: true, respostaCorreta, tempoResposta });
     } else {
         erros++;
-        contas.push({ operacao, respostaUsuario, correto: false, respostaCorreta });
+        contas.push({ operacao, respostaUsuario, correto: false, respostaCorreta, tempoResposta });
     }
 
     document.getElementById('resposta').value = '';
@@ -71,19 +76,27 @@ function iniciarTemporizador() {
     }, 1000);
 }
 
-// Função para atualizar o gráfico
+// Função para calcular tempo médio por questão
+function calcularTempoMedio() {
+    const totalTempo = temposPorQuestao.reduce((acc, tempo) => acc + tempo, 0);
+    const media = totalTempo / temposPorQuestao.length;
+    return media.toFixed(2); // Retorna com 2 casas decimais
+}
+
 function atualizarGrafico() {
+    const tempoMedio = calcularTempoMedio();
+
     const ctx = document.getElementById('grafico').getContext('2d');
     if (grafico) grafico.destroy();
     grafico = new Chart(ctx, {
         type: 'bar',
         data: {
-            labels: ['Acertos', 'Erros'],
+            labels: ['Acertos', 'Erros', 'Tempo Médio (s)'],
             datasets: [{
                 label: 'Resultados',
-                data: [acertos, erros],
-                backgroundColor: ['#4AB2B5', '#F39C12'],
-                borderColor: ['#4AB2B5', '#F39C12'],
+                data: [acertos, erros, (tempoMedio / 1000)], // Converte ms para segundos
+                backgroundColor: ['#4AB2B5', '#F39C12', '#8E44AD'],
+                borderColor: ['#4AB2B5', '#F39C12', '#8E44AD'],
                 borderWidth: 1
             }]
         },
