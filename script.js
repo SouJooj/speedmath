@@ -10,6 +10,7 @@ let operacoesSelecionadas = [];
 let grafico;
 let tempoInicioQuestao = 0; // Marca o início de cada questão
 let temposPorQuestao = []; // Armazena os tempos de cada questão
+const leaderboardKey = 'speedMathLeaderboard';
 
 // Função para gerar operação aleatória
 function gerarOperacao() {
@@ -146,6 +147,78 @@ function atualizarContas() {
     `;
 }
 
+// Função para salvar no leaderboard
+function salvarNoLeaderboard() {
+    const nomeJogador = document.getElementById('nome-jogador').value.trim();
+
+    if (!nomeJogador) {
+        alert('Por favor, insira seu nome antes de salvar no leaderboard.');
+        return;
+    }
+
+    if (tempoJogada === 0 || isNaN(tempoJogada)) {
+        alert('Jogos com cronômetro desligado não são salvos no leaderboard.');
+        return;
+    }
+
+    const tempoMedio = calcularTempoMedio();
+    const resultado = {
+        jogador: nomeJogador,
+        acertos,
+        erros,
+        tempoMedio: (tempoMedio / 1000).toFixed(2),
+        operacoes: operacoesSelecionadas.join(', '),
+        data: new Date().toLocaleString()
+    };
+
+    const leaderboard = JSON.parse(localStorage.getItem(leaderboardKey)) || [];
+    leaderboard.push(resultado);
+    leaderboard.sort((a, b) => b.acertos - a.acertos);
+    localStorage.setItem(leaderboardKey, JSON.stringify(leaderboard));
+
+    alert('Resultado salvo no leaderboard!');
+}
+
+// Função para exibir o leaderboard (com botão excluir)
+function exibirLeaderboard() {
+    const leaderboard = JSON.parse(localStorage.getItem(leaderboardKey)) || [];
+    const leaderboardList = document.getElementById('leaderboard-list');
+    leaderboardList.innerHTML = '';
+
+    if (leaderboard.length === 0) {
+        leaderboardList.innerHTML = '<li>Nenhum jogo salvo ainda!</li>';
+        return;
+    }
+
+    leaderboard.forEach((entry, index) => {
+        leaderboardList.innerHTML += `
+            <li>
+                <strong>${index + 1}. ${entry.jogador}</strong><br>
+                Acertos: ${entry.acertos}<br>
+                Erros: ${entry.erros}<br>
+                Tempo Médio: ${entry.tempoMedio}s<br>
+                Operações: ${entry.operacoes}<br>
+                Data: ${entry.data}<br>
+                <button onclick="excluirDoLeaderboard(${index})" class="delete-btn">Excluir</button>
+            </li>
+        `;
+    });
+
+    document.querySelector('.resultado').style.display = 'none';
+    document.querySelector('.leaderboard').style.display = 'block';
+}
+
+
+// Função para excluir uma entrada do leaderboard
+function excluirDoLeaderboard(index) {
+    const leaderboard = JSON.parse(localStorage.getItem(leaderboardKey)) || [];
+    if (index >= 0 && index < leaderboard.length) {
+        leaderboard.splice(index, 1); // Remove a entrada do array
+        localStorage.setItem(leaderboardKey, JSON.stringify(leaderboard)); // Atualiza o localStorage
+        exibirLeaderboard(); // Atualiza a interface
+    }
+}
+
 // Função para reiniciar o jogo
 function reiniciarJogo() {
     acertos = 0;
@@ -198,3 +271,20 @@ document.getElementById('max').addEventListener('input', function (e) {
 });
 
 document.getElementById('finalizar').addEventListener('click', finalizarJogo);
+
+// Evento do botão de salvar no leaderboard
+document.getElementById('salvar-leaderboard').addEventListener('click', salvarNoLeaderboard);
+
+// Botão "Voltar ao Menu" no Leaderboard
+document.getElementById('voltar-menu').addEventListener('click', () => {
+    document.querySelector('.leaderboard').style.display = 'none';
+    document.querySelector('.config').style.display = 'block';
+});
+
+
+// Botão "Leaderboard" na tela principal
+document.getElementById('leaderboard-main').addEventListener('click', () => {
+    document.querySelector('.config').style.display = 'none';
+    document.querySelector('.leaderboard').style.display = 'block';
+    exibirLeaderboard();
+});

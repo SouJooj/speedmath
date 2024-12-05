@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="pt">
 <head>
-    <link rel="icon" type="image/x-icon" href="/smathpeedmin.png">
+    <link rel="icon" type="image/x-icon" href="/speedmath/smathpeedmin.png">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Speed Math</title>
@@ -36,8 +36,10 @@
                     <input id="max" type="text" value="10" inputmode="numeric" pattern="\d">
                 </div>
                 <button id="start" class="start-btn">INICIAR</button>
+                <button id="leaderboard-main" class="leaderboard-btn">Leaderboard</button>
             </div>
         </div>
+
 
         <!-- Tela do Jogo -->
         <div class="jogo" style="display: none;">
@@ -51,10 +53,21 @@
         <!-- Tela de Resultados -->
         <div class="resultado" style="display: none;">
             <canvas id="grafico"></canvas>
+            <input id="nome-jogador" type="text" placeholder="Seu nome">
+            <button id="salvar-leaderboard">Salvar no Leaderboard</button>
             <button id="voltar">Voltar</button>
             <button id="exibir-contas">Exibir Contas</button>
             <div id="contas" class="account-details" style="display: none;"></div>
         </div>
+        
+
+        <!-- Tela do Leaderboard -->
+        <div class="leaderboard" style="display: none;">
+            <h2>Leaderboard</h2>
+            <ul id="leaderboard-list"></ul>
+            <button id="voltar-menu">Voltar ao Menu Inicial</button>
+        </div>
+
     </div>
 
     <script src="script.js"></script>

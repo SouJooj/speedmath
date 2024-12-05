@@ -157,3 +157,55 @@ button#finalizar {
 button#finalizar:hover {
     background: #e67e22;
 }
+
+.leaderboard {
+    text-align: center;
+    background: #394E52;
+    border-radius: 10px;
+    padding: 1.5rem;
+}
+
+.leaderboard h2 {
+    color: #4AB2B5;
+    font-size: 2rem;
+}
+
+#leaderboard-list {
+    list-style: none;
+    padding: 0;
+    color: #D6DFE2;
+    text-align: left;
+}
+
+#leaderboard-list li {
+    margin-bottom: 1rem;
+    padding: 10px;
+    background: #2F3E42;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+}
+
+button.leaderboard-btn {
+    background: #8E44AD;
+    color: #FFFFFF;
+}
+
+button.leaderboard-btn:hover {
+    background: #732D91;
+}
+
+button.delete-btn {
+    background: #D64545;
+    color: #FFFFFF;
+    font-size: 0.9rem;
+    padding: 5px 10px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+button.delete-btn:hover {
+    background: #a73636;
+}
+
