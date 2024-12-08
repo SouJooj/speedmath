@@ -40,7 +40,6 @@
             </div>
         </div>
 
-
         <!-- Tela do Jogo -->
         <div class="jogo" style="display: none;">
             <div id="temporizador" class="timer">30</div>
@@ -59,17 +58,19 @@
             <button id="exibir-contas">Exibir Contas</button>
             <div id="contas" class="account-details" style="display: none;"></div>
         </div>
-        
 
         <!-- Tela do Leaderboard -->
         <div class="leaderboard" style="display: none;">
             <h2>Leaderboard</h2>
             <ul id="leaderboard-list"></ul>
+            <canvas id="grafico-leaderboard" style="margin-top: 1.5rem;"></canvas>
             <button id="voltar-menu">Voltar ao Menu Inicial</button>
         </div>
+
         <!-- Estatísticas detalhadas -->
         <div class="estatisticas" style="display: none;">
             <div id="contas-detalhadas" class="account-details"></div>
+            <canvas id="grafico-estatisticas" style="margin-top: 1.5rem;"></canvas>
             <button id="voltar-detalhes">Voltar ao Leaderboard</button>
         </div>
     </div>

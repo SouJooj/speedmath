@@ -40,7 +40,6 @@ function gerarOperacao() {
     tempoInicioQuestao = performance.now(); // Marca o início da nova questão
 }
 
-
 // Função para verificar resposta do usuário
 function verificarResposta() {
     const respostaUsuario = parseInt(document.getElementById('resposta').value);
@@ -84,6 +83,7 @@ function calcularTempoMedio() {
     return media.toFixed(2); // Retorna com 2 casas decimais
 }
 
+// Atualizar gráfico principal
 function atualizarGrafico() {
     const tempoMedio = calcularTempoMedio();
 
@@ -119,17 +119,18 @@ function finalizarJogo() {
     atualizarGrafico();
     atualizarContas();
 }
+
 // Função para atualizar as contas exibidas
 function atualizarContas() {
     const contasContainer = document.getElementById('contas');
     contasContainer.innerHTML = '';
 
-    contas.forEach(({ operacao, respostaUsuario, correto, respostaCorreta }) => {
+    contas.forEach(({ operacao, respostaUsuario, correto, respostaCorreta, tempoResposta }) => {
         const cor = correto ? 'green' : 'red';
         const status = correto ? 'Correto' : `Errado (Correto: ${respostaCorreta})`;
         contasContainer.innerHTML += `
             <p style="color: ${cor};">
-                ${operacao} = ${respostaUsuario} (${status})
+                ${operacao} = ${respostaUsuario} (${status}) - Tempo: ${(tempoResposta / 1000).toFixed(2)}s
             </p>
         `;
     });
@@ -180,7 +181,7 @@ function salvarNoLeaderboard() {
     alert('Resultado salvo no leaderboard!');
 }
 
-// Função para exibir as contas de um jogador no leaderboard
+// Função para exibir estatísticas detalhadas
 function exibirEstatisticas(index) {
     const leaderboard = JSON.parse(localStorage.getItem(leaderboardKey)) || [];
     const entry = leaderboard[index];
@@ -200,19 +201,34 @@ function exibirEstatisticas(index) {
         `;
     });
 
-    // Mostra as estatísticas gerais
-    contasDetalhes.innerHTML += `
-        <hr>
-        <p style="color: green;">Acertos: ${entry.acertos}</p>
-        <p style="color: red;">Erros: ${entry.erros}</p>
-        <p>Tempo Médio: ${entry.tempoMedio}s</p>
-    `;
+    const ctx = document.getElementById('grafico-estatisticas').getContext('2d');
+    if (grafico) grafico.destroy();
+    grafico = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: ['Acertos', 'Erros', 'Tempo Médio (s)'],
+            datasets: [{
+                label: 'Estatísticas Individuais',
+                data: [entry.acertos, entry.erros, parseFloat(entry.tempoMedio)],
+                backgroundColor: ['#4AB2B5', '#F39C12', '#8E44AD'],
+                borderColor: ['#4AB2B5', '#F39C12', '#8E44AD'],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
 
     document.querySelector('.leaderboard').style.display = 'none';
     document.querySelector('.estatisticas').style.display = 'block';
 }
 
-// Função para exibir o leaderboard com botão de estatísticas
+// Função para exibir o leaderboard com gráfico geral
 function exibirLeaderboard() {
     const leaderboard = JSON.parse(localStorage.getItem(leaderboardKey)) || [];
     const leaderboardList = document.getElementById('leaderboard-list');
@@ -238,15 +254,43 @@ function exibirLeaderboard() {
         `;
     });
 
+    const ctx = document.getElementById('grafico-leaderboard').getContext('2d');
+    const totais = leaderboard.reduce((acc, entry) => {
+        acc.acertos += entry.acertos;
+        acc.erros += entry.erros;
+        acc.tempoMedio += parseFloat(entry.tempoMedio);
+        return acc;
+    }, { acertos: 0, erros: 0, tempoMedio: 0 });
+
+    if (grafico) grafico.destroy();
+    grafico = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: ['Acertos Totais', 'Erros Totais', 'Tempo Médio (s)'],
+            datasets: [{
+                label: 'Resultados Gerais',
+                data: [
+                    totais.acertos,
+                    totais.erros,
+                    (totais.tempoMedio / leaderboard.length).toFixed(2)
+                ],
+                backgroundColor: ['#4AB2B5', '#F39C12', '#8E44AD'],
+                borderColor: ['#4AB2B5', '#F39C12', '#8E44AD'],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+
     document.querySelector('.resultado').style.display = 'none';
     document.querySelector('.leaderboard').style.display = 'block';
 }
-
-// Botão "Voltar do Detalhes"
-document.getElementById('voltar-detalhes').addEventListener('click', () => {
-    document.querySelector('.estatisticas').style.display = 'none';
-    document.querySelector('.leaderboard').style.display = 'block';
-});
 
 // Função para excluir uma entrada do leaderboard
 function excluirDoLeaderboard(index) {
@@ -258,7 +302,7 @@ function excluirDoLeaderboard(index) {
     }
 }
 
-// Função para reiniciar o jogo
+// Reiniciar Jogo
 function reiniciarJogo() {
     acertos = 0;
     erros = 0;
@@ -290,7 +334,9 @@ document.getElementById('start').addEventListener('click', () => {
 document.getElementById('reiniciar').addEventListener('click', () => {
     location.reload(); // Recarrega a página para reiniciar o jogo
 });
+
 document.getElementById('voltar').addEventListener('click', reiniciarJogo);
+
 document.getElementById('exibir-contas').addEventListener('click', () => {
     const contasContainer = document.getElementById('contas');
     contasContainer.style.display = contasContainer.style.display === 'none' ? 'block' : 'none';
@@ -301,6 +347,7 @@ document.getElementById('resposta').addEventListener('keydown', (e) => {
         verificarResposta();
     }
 });
+
 document.getElementById('min').addEventListener('input', function (e) {
     this.value = this.value.replace(/[^0-9]/g, '');
 });
@@ -320,10 +367,15 @@ document.getElementById('voltar-menu').addEventListener('click', () => {
     document.querySelector('.config').style.display = 'block';
 });
 
-
 // Botão "Leaderboard" na tela principal
 document.getElementById('leaderboard-main').addEventListener('click', () => {
     document.querySelector('.config').style.display = 'none';
     document.querySelector('.leaderboard').style.display = 'block';
     exibirLeaderboard();
+});
+
+// Botão "Voltar do Detalhes"
+document.getElementById('voltar-detalhes').addEventListener('click', () => {
+    document.querySelector('.estatisticas').style.display = 'none';
+    document.querySelector('.leaderboard').style.display = 'block';
 });
