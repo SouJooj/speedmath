@@ -148,17 +148,12 @@ function atualizarContas() {
     `;
 }
 
-// Função para salvar no leaderboard
+// Função para salvar no leaderboard (ajustada para salvar o tempo escolhido)
 function salvarNoLeaderboard() {
     const nomeJogador = document.getElementById('nome-jogador').value.trim();
 
     if (!nomeJogador) {
         alert('Por favor, insira seu nome antes de salvar no leaderboard.');
-        return;
-    }
-
-    if (tempoJogada === 0 || isNaN(tempoJogada)) {
-        alert('Jogos com cronômetro desligado não são salvos no leaderboard.');
         return;
     }
 
@@ -168,6 +163,7 @@ function salvarNoLeaderboard() {
         acertos,
         erros,
         tempoMedio: (tempoMedio / 1000).toFixed(2),
+        tempoSelecionado: tempoJogada || 'Desligado',
         operacoes: operacoesSelecionadas.join(', '),
         data: new Date().toLocaleString(),
         contas: [...contas] // Inclui as contas realizadas no jogo
@@ -228,7 +224,7 @@ function exibirEstatisticas(index) {
     document.querySelector('.estatisticas').style.display = 'block';
 }
 
-// Função para exibir o leaderboard com gráfico geral
+// Função para exibir leaderboard (ajustado para recriar o gráfico após voltar)
 function exibirLeaderboard() {
     const leaderboard = JSON.parse(localStorage.getItem(leaderboardKey)) || [];
     const leaderboardList = document.getElementById('leaderboard-list');
@@ -245,8 +241,9 @@ function exibirLeaderboard() {
                 <strong>${index + 1}. ${entry.jogador}</strong><br>
                 Acertos: ${entry.acertos}<br>
                 Erros: ${entry.erros}<br>
-                Tempo Médio: ${entry.tempoMedio}s<br>
                 Operações: ${entry.operacoes}<br>
+                Tempo: ${entry.tempoSelecionado}<br>
+                Tempo Médio: ${entry.tempoMedio}s<br>
                 Data: ${entry.data}<br>
                 <button onclick="exibirEstatisticas(${index})" class="stats-btn">Ver Estatísticas</button>
                 <button onclick="excluirDoLeaderboard(${index})" class="delete-btn">Excluir</button>
@@ -254,6 +251,7 @@ function exibirLeaderboard() {
         `;
     });
 
+    // Atualiza o gráfico geral
     const ctx = document.getElementById('grafico-leaderboard').getContext('2d');
     const totais = leaderboard.reduce((acc, entry) => {
         acc.acertos += entry.acertos;
@@ -322,13 +320,16 @@ document.getElementById('start').addEventListener('click', () => {
     }
 
     intervalo = parseInt(document.getElementById('max').value);
-    tempoJogada = parseInt(document.getElementById('time-select').value);
+    tempoJogada = document.getElementById('time-select').value === 'off' ? 0 : parseInt(document.getElementById('time-select').value);
 
     document.querySelector('.config').style.display = 'none';
     document.querySelector('.jogo').style.display = 'block';
 
     gerarOperacao();
-    iniciarTemporizador();
+    if (tempoJogada) iniciarTemporizador();
+
+    // Seleciona o campo de resposta automaticamente
+    document.getElementById('resposta').focus();
 });
 
 document.getElementById('reiniciar').addEventListener('click', () => {
@@ -378,4 +379,5 @@ document.getElementById('leaderboard-main').addEventListener('click', () => {
 document.getElementById('voltar-detalhes').addEventListener('click', () => {
     document.querySelector('.estatisticas').style.display = 'none';
     document.querySelector('.leaderboard').style.display = 'block';
+    exibirLeaderboard(); // Recria o gráfico geral ao voltar
 });
